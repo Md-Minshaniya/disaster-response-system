@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Response System - Dashboard</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==">
+    <meta name="theme-color" content="#667eea">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Header -->
+        <header class="navbar">
+            <div class="nav-brand">
+                <h1>🚨 Disaster Response System</h1>
+            </div>
+            <div class="nav-actions">
+                <button class="btn-dark-mode" onclick="toggleDarkMode()" title="Toggle Dark Mode">🌙</button>
+                <div class="nav-links">
+                    <a href="#" onclick="navigateTab('overview')">Overview</a>
+                    <a href="#" onclick="navigateTab('simulate')">Simulate</a>
+                    <a href="#" onclick="navigateTab('analytics')">Analytics</a>
+                    <a href="#" onclick="navigateTab('alerts')">Alerts</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-info">
+                            <div class="stat-label">Total Simulations</div>
+                            <div class="stat-value" id="totalSimulations">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-info">
+                            <div class="stat-label">Avg Response Time</div>
+                            <div class="stat-value" id="avgResponseTime">0ms</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-info">
+                            <div class="stat-label">Success Rate</div>
+                            <div class="stat-value" id="successRate">0%</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🚨</div>
+                        <div class="stat-info">
+                            <div class="stat-label">Critical Cases</div>
+                            <div class="stat-value" id="criticalCases">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Live Map - Flood Risk Zones</h2>
+                    <div id="map" style="height: 500px; border-radius: 8px; overflow: hidden;"></div>
+                </div>
+
+                <div class="agent-status-grid">
+                    <div class="agent-card">
+                        <div class="agent-icon">🌤️</div>
+                        <div class="agent-name">Weather Monitor</div>
+                        <div class="agent-status" id="weather-status">Monitoring</div>
+                        <div class="agent-time" id="weather-time">--ms</div>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-icon">🌊</div>
+                        <div class="agent-name">Flood Predictor</div>
+                        <div class="agent-status" id="flood-status">Ready</div>
+                        <div class="agent-time" id="flood-time">--ms</div>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-icon">🚁</div>
+                        <div class="agent-name">Resource Allocator</div>
+                        <div class="agent-status" id="resource-status">Ready</div>
+                        <div class="agent-time" id="resource-time">--ms</div>
+                    </div>
+                    <div class="agent-card">
+                        <div class="agent-icon">📢</div>
+                        <div class="agent-name">Emergency Comms</div>
+                        <div class="agent-status" id="comm-status">Ready</div>
+                        <div class="agent-time" id="comm-time">--ms</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simulation Tab -->
+            <div id="simulate" class="tab-content">
+                <div class="card">
+                    <h2>Run New Simulation</h2>
+                    <form id="simulationForm" class="form-grid">
+                        <div class="form-group">
+                            <label for="region">Region:</label>
+                            <select id="region" required>
+                                <option value="">Select Region</option>
+                                <option value="Hyderabad">Hyderabad</option>
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Chennai">Chennai</option>
+                                <option value="Bangalore">Bangalore</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rainfall">Rainfall (mm):</label>
+                            <input type="number" id="rainfall" min="0" max="200" step="0.1" value="87" required>
+                            <span class="range-display" id="rainfallDisplay">87 mm</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="riverLevel">River Level (m):</label>
+                            <input type="number" id="riverLevel" min="0" max="12" step="0.1" value="6.5" required>
+                            <span class="range-display" id="riverLevelDisplay">6.5 m</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="population">Population:</label>
+                            <input type="number" id="population" min="0" max="20000000" step="100000" value="8500000" required>
+                            <span class="range-display" id="populationDisplay">8.5M</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="availableTeams">Available Rescue Teams:</label>
+                            <input type="number" id="availableTeams" min="0" max="20" value="10" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="availableBoats">Available Boats:</label>
+                            <input type="number" id="availableBoats" min="0" max="15" value="8" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="foodKits">Food Kits:</label>
+                            <input type="number" id="foodKits" min="0" max="10000" value="5000" required>
+                        </div>
+
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="adaptivePriority" checked>
+                            <label for="adaptivePriority">Use Adaptive Priority Algorithm</label>
+                        </div>
+
+                        <button type="submit" class="btn-primary">▶ Run Simulation</button>
+                        <button type="button" class="btn-secondary" onclick="runBenchmark()">📊 Run Benchmark</button>
+                    </form>
+                </div>
+
+                <div id="loading" class="loading hidden">
+                    <div class="spinner"></div>
+                    <p>Running simulation... Please wait</p>
+                </div>
+
+                <div id="results" class="card hidden">
+                    <h2>Simulation Results</h2>
+                    <div id="resultsContent"></div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics" class="tab-content">
+                <div class="card">
+                    <h2>Simulation History</h2>
+                    <div class="button-group">
+                        <button class="btn-secondary" onclick="exportToPDF()">📄 Export PDF</button>
+                        <button class="btn-secondary" onclick="exportToExcel()">📊 Export Excel</button>
+                        <button class="btn-secondary" onclick="loadHistory()">🔄 Refresh</button>
+                    </div>
+                    <div id="historyTable"></div>
+                </div>
+            </div>
+
+            <!-- Alerts Tab -->
+            <div id="alerts" class="tab-content">
+                <div class="card">
+                    <h2>Alert Management</h2>
+                    <div class="alert-form">
+                        <div class="form-group">
+                            <label for="alertRecipients">Phone Numbers (comma-separated):</label>
+                            <input type="text" id="alertRecipients" placeholder="+91-9876543210, +91-9123456789">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="alertEmails">Email Addresses (comma-separated):</label>
+                            <input type="text" id="alertEmails" placeholder="user@example.com, admin@disaster.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="alertMessage">Message:</label>
+                            <textarea id="alertMessage" rows="4" placeholder="Enter alert message..."></textarea>
+                        </div>
+
+                        <button class="btn-primary" onclick="sendAlert()">📢 Send Alert</button>
+                    </div>
+
+                    <div id="alertLog" class="card">
+                        <h3>Alert Log</h3>
+                        <div id="alertLogContent"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Toast Notifications -->
+        <div id="toast" class="toast"></div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2026 Disaster Response System | Multi-Agent AI-Powered Platform</p>
+        </footer>
+    </div>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
