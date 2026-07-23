@@ -1,321 +1,281 @@
-Disaster Response System
+# Disaster Response System
 
-A multi-agent disaster management platform built with Spring Boot that simulates disaster conditions, predicts flood risk, allocates emergency resources, generates alerts, and monitors agent execution through a real-time dashboard.
+> A **Multi-Agent Disaster Management Platform** built with **Spring Boot** that simulates disaster conditions, predicts flood risk, allocates emergency resources, generates alerts, and provides real-time monitoring through a WebSocket-enabled dashboard.
 
-Overview
+---
 
-The system uses multiple specialized agents coordinated by a supervisor agent. Each agent performs a specific disaster-response task, while an adaptive priority engine determines the execution order based on current disaster conditions.
+# Overview
 
-Key Features
+The Disaster Response System uses multiple intelligent agents coordinated by a Supervisor Agent to analyze disaster conditions and execute emergency response tasks. An Adaptive Priority Engine dynamically determines the execution order of agents to improve response efficiency.
 
-Multi-agent disaster response workflow
+---
 
-Weather-condition analysis
+# Key Features
 
-Flood-risk prediction
+- Multi-Agent Disaster Response Workflow
+- Weather Condition Analysis
+- Flood Risk Prediction
+- Emergency Resource Allocation
+- Disaster Alert Generation
+- Adaptive Priority Engine
+- Real-Time Dashboard using WebSocket
+- Simulation History Management
+- Agent Performance Tracking
+- Adaptive vs Fixed Priority Benchmarking
+- PDF Report Generation
+- Excel Report Export
 
-Emergency resource allocation
+---
 
-Alert and communication generation
+# Multi-Agent Architecture
 
-Adaptive agent-priority calculation
+| Agent | Responsibility |
+|-------|----------------|
+| **Supervisor Agent** | Coordinates all agents and manages simulation execution. |
+| **Weather Agent** | Analyzes rainfall, river level, and weather conditions. |
+| **Flood Prediction Agent** | Calculates flood risk and determines risk levels. |
+| **Resource Allocation Agent** | Allocates emergency teams, boats, and food kits. |
+| **Communication Agent** | Generates disaster alerts and response messages. |
+| **Adaptive Priority Engine** | Dynamically prioritizes agent execution based on disaster severity. |
 
-Real-time dashboard updates using WebSocket
+---
 
-Simulation history stored in MySQL
+# Screenshots
 
-Agent execution tracking and performance metrics
+## Dashboard
 
-Adaptive-priority and fixed-priority benchmarking
+![Dashboard](screenshots/dashboard.png)
 
-PDF simulation report generation
+---
 
-Excel export for simulations and agent executions
+## Disaster Simulation
 
-Multi-Agent Architecture
+![Simulation](screenshots/simulation.png)
 
-Supervisor Agent: Coordinates the complete simulation and manages agent execution.
+---
 
-Weather Agent: Analyzes rainfall, river level, and other provided weather conditions.
+## Simulation Results
 
-Flood Prediction Agent: Calculates flood risk and determines the corresponding risk level.
+![Results](screenshots/results.png)
 
-Resource Allocation Agent: Allocates available teams, boats, and food kits based on disaster severity.
+---
 
-Communication Agent: Generates disaster alerts and emergency response messages.
+## Reports
 
-Adaptive Priority Engine: Dynamically calculates agent priorities according to current disaster conditions.
+![Reports](screenshots/reports.png)
 
-Screenshots
+---
 
-Dashboard
+# Tech Stack
 
+| Category | Technologies |
+|-----------|--------------|
+| **Backend** | Java 17, Spring Boot, Spring Framework, Spring Data JPA, Hibernate, REST APIs, WebSocket, Maven, Lombok |
+| **Frontend** | HTML5, CSS3, JavaScript, Thymeleaf |
+| **Database** | MySQL |
+| **Reporting** | Apache POI, Apache PDFBox |
+| **Development Tools** | Git, GitHub, IntelliJ IDEA, VS Code, Eclipse, Postman |
 
+---
 
-Disaster Simulation
+# Project Structure
 
-
-
-Simulation Results
-
-
-
-Reports
-
-
-
-Tech Stack
-
-Category
-
-Technologies
-
-Backend
-
-Java 17, Spring Boot, Spring Framework, Spring Data JPA, Hibernate, REST APIs, WebSocket, Maven, Lombok
-
-Frontend
-
-HTML5, CSS3, JavaScript, Thymeleaf
-
-Database
-
-MySQL
-
-Reporting
-
-Apache POI, Apache PDFBox
-
-Development Tools
-
-Git, GitHub, IntelliJ IDEA, Eclipse, VS Code, Postman
-
-Project Structure
-
+```text
 disaster-response-system/
+├── src/
+├── screenshots/
 ├── pom.xml
 ├── README.md
-├── screenshots/
-│   ├── dashboard.png
-│   ├── simulation.png
-│   ├── results.png
-│   └── reports.png
-└── src/
-    └── main/
-        ├── java/
-        │   └── com/disaster/
-        │       ├── agent/
-        │       ├── config/
-        │       ├── controller/
-        │       ├── engine/
-        │       ├── model/
-        │       ├── repository/
-        │       ├── service/
-        │       └── DisasterResponseApplication.java
-        └── resources/
-            ├── application.yml
-            ├── schema.sql
-            ├── templates/
-            │   └── dashboard.html
-            └── static/
-                ├── css/
-                │   └── style.css
-                └── js/
-                    └── dashboard.js
+└── schema.sql
+```
 
-Prerequisites
+---
 
-Install the following before running the project:
+# Prerequisites
 
-Java 17 or later
+- Java 17+
+- Maven 3.6+
+- MySQL 8+
+- Git
 
-Maven 3.6 or later
+---
 
-MySQL 8 or later
+# Database Setup
 
-Git
-
-Database Setup
-
-Create the MySQL database:
-
+```sql
 CREATE DATABASE disaster_db;
+```
 
-The project includes a schema.sql file containing the required database structure.
+Import the provided **schema.sql** file before running the application.
 
-Configuration
+---
 
-Open:
+# Configuration
 
+Update the database configuration in:
+
+```text
 src/main/resources/application.yml
+```
 
-Configure the database connection using environment variables:
-
+```yaml
 spring:
   datasource:
     url: ${DB_URL:jdbc:mysql://localhost:3306/disaster_db}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD}
+```
 
-Set the database password before running the application.
+---
 
-Windows PowerShell
+# Run the Application
 
-$env:DB_PASSWORD="your_mysql_password"
+### Clone Repository
 
-Windows Command Prompt
-
-set DB_PASSWORD=your_mysql_password
-
-macOS/Linux
-
-export DB_PASSWORD=your_mysql_password
-
-Do not commit real database passwords or other credentials to GitHub.
-
-Run the Application
-
-Clone the repository:
-
+```bash
 git clone https://github.com/Md-Minshaniya/disaster-response-system.git
-cd disaster-response-system
+```
 
-Build the project:
+### Build Project
 
+```bash
 mvn clean install
+```
 
-Run the application:
+### Run Project
 
+```bash
 mvn spring-boot:run
+```
 
-Open the dashboard in your browser:
+Open the application:
 
+```text
 http://localhost:8080
+```
 
-Application Workflow
+---
 
+# Application Workflow
+
+```text
 User Input
-    ↓
+      │
+      ▼
 Supervisor Agent
-    ↓
+      │
+      ▼
 Adaptive Priority Engine
-    ↓
+      │
+      ▼
 Weather Agent
-    ↓
+      │
+      ▼
 Flood Prediction Agent
-    ↓
+      │
+      ▼
 Resource Allocation Agent
-    ↓
+      │
+      ▼
 Communication Agent
-    ↓
-Database + Real-Time Dashboard + Reports
+      │
+      ▼
+Database + Dashboard + Reports
+```
 
-Main Modules
+---
 
-Simulation Management
+# Main Modules
 
-The simulation accepts disaster-related inputs such as:
+## Simulation Management
 
-Region
+The simulation accepts:
 
-Rainfall
+- Region
+- Rainfall
+- River Level
+- Population
+- Available Emergency Teams
+- Available Boats
+- Available Food Kits
 
-River level
+The collected inputs are processed by the agents and the simulation results are stored in MySQL.
 
-Population
+---
 
-Available emergency teams
+## Real-Time Monitoring
 
-Available boats
+- Live WebSocket updates
+- Agent execution status
+- Risk level monitoring
+- Execution time tracking
+- Dashboard statistics
 
-Available food kits
+---
 
-The system processes these inputs through the agents and stores the simulation results in MySQL.
+## Benchmarking
 
-Real-Time Monitoring
+- Adaptive Priority Execution
+- Fixed Priority Execution
+- Performance Comparison
 
-WebSocket communication updates the dashboard while agents are executing. The dashboard displays simulation results, risk level, agent status, execution time, and system metrics.
+---
 
-Benchmarking
+## Reporting
 
-The benchmark module compares:
+- PDF Report Generation
+- Excel Report Export
+- Simulation History Export
 
-Adaptive-priority execution
+---
 
-Fixed-priority execution
+# Database Entities
 
-This comparison helps evaluate execution time and agent-processing performance.
+## Simulation
 
-Reporting
+Stores:
 
-The system supports:
+- Region
+- Rainfall
+- River Level
+- Population
+- Flood Risk
+- Risk Level
+- Response Time
+- Priority Mode
+- Creation Time
 
-PDF reports for individual simulations
+## Agent Execution
 
-Excel exports for simulation history
+Stores:
 
-Excel exports for agent execution records
+- Simulation Reference
+- Agent Name
+- Execution Time
+- Priority Score
+- Agent Result
+- Creation Time
 
-Database Entities
+---
 
-Simulation
+# Testing
 
-Stores the main disaster-simulation details:
+The REST APIs can be tested using **Postman**.
 
-Region
+Verify the project using:
 
-Rainfall
-
-River level
-
-Population
-
-Flood risk
-
-Risk level
-
-Response time
-
-Priority mode
-
-Creation time
-
-Agent Execution
-
-Stores execution details for each agent:
-
-Simulation reference
-
-Agent name
-
-Execution time
-
-Priority score
-
-Agent result
-
-Creation time
-
-Testing
-
-The REST APIs can be tested using Postman.
-
-Before pushing changes, verify the project build:
-
+```bash
 mvn clean install
+```
 
-Run the application and confirm that:
+Confirm that:
 
-The application connects successfully to MySQL
-
-The dashboard opens correctly
-
-Disaster simulations execute successfully
-
-Simulation history is stored in the database
-
-WebSocket updates are displayed
-
-PDF and Excel reports are generated
-
-Benchmarking completes successfully
+- Application starts successfully.
+- MySQL connection is established.
+- Dashboard loads correctly.
+- Disaster simulations execute successfully.
+- Simulation history is stored.
+- WebSocket updates are displayed.
+- PDF reports are generated.
+- Excel reports are generated.
+- Benchmarking completes successfully.
